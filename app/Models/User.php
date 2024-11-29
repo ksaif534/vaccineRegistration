@@ -52,8 +52,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function vaccine_center() : BelongsTo
+    public function vaccine_center(): BelongsTo
     {
-        return $this->belongsTo(VaccineCenter::class,'vaccine_center_id','id');
+        return $this->belongsTo(VaccineCenter::class, 'vaccine_center_id', 'id');
     }
 }

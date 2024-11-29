@@ -2,12 +2,14 @@
 
 namespace App\Mail;
 
+use App\Models\User;
+use App\Models\VaccineCenter;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\{Content,Envelope,Address};
+use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use App\Models\{User,VaccineCenter};
 
 class SendEmailAfterVaccineSchedule extends Mailable
 {
@@ -16,7 +18,7 @@ class SendEmailAfterVaccineSchedule extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public User $user,public VaccineCenter $vaccineCenter)
+    public function __construct(public User $user, public VaccineCenter $vaccineCenter)
     {
         //
     }
@@ -40,8 +42,8 @@ class SendEmailAfterVaccineSchedule extends Mailable
         return new Content(
             markdown: 'mail.schedule-vaccine',
             with: [
-                'user'              => $this->user,
-                'vaccine_center'    => $this->vaccineCenter
+                'user' => $this->user,
+                'vaccine_center' => $this->vaccineCenter,
             ]
         );
     }

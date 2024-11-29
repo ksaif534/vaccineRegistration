@@ -2,7 +2,7 @@
 
 namespace App\Enumerators;
 
-enum UserStatus : string
+enum UserStatus: string
 {
     case NOT_SCHEDULED = 'Not scheduled';
     case SCHEDULED = 'Scheduled';

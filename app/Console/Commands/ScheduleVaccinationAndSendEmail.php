@@ -2,7 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\{ScheduleVaccinationDate,SendEmailNotification};
+use App\Jobs\ScheduleVaccinationDate;
+use App\Jobs\SendEmailNotification;
 use App\Models\User;
 use Illuminate\Console\Command;
 

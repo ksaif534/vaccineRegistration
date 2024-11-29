@@ -2,11 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Enumerators\UserStatus;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use App\Models\{User};
-use App\Enumerators\UserStatus;
 
 class ScheduleVaccinationDate implements ShouldQueue
 {
@@ -27,27 +27,29 @@ class ScheduleVaccinationDate implements ShouldQueue
     {
         $last24Hours = Carbon::now()->subHours(24);
 
-        $availableNumberOfDailyUsersForSchedule = User::where('status',UserStatus::NOT_SCHEDULED)
-                                    ->where('created_at','>=',$last24Hours)
-                                    ->count();
+        $availableNumberOfDailyUsersForSchedule = User::where('status', UserStatus::NOT_SCHEDULED)
+            ->where('created_at', '>=', $last24Hours)
+            ->count();
 
-        $usersToSchedule = User::where('status',UserStatus::NOT_SCHEDULED)
-                ->with('vaccine_center')
-                ->orderBy('created_at','asc')
-                ->chunkById(100, function(\Illuminate\Database\Eloquent\Collection $usersToSchedule) use ($availableNumberOfDailyUsersForSchedule) {
+        $usersToSchedule = User::where('status', UserStatus::NOT_SCHEDULED)
+            ->with('vaccine_center')
+            ->orderBy('created_at', 'asc')
+            ->chunkById(100, function (\Illuminate\Database\Eloquent\Collection $usersToSchedule) use ($availableNumberOfDailyUsersForSchedule) {
 
-                    foreach ($usersToSchedule as $user) {
-                        if ($availableNumberOfDailyUsersForSchedule < 0) break;
-                        
-                        if ($user->vaccine_center->daily_limit >= $availableNumberOfDailyUsersForSchedule) {
-                            $user->update([
-                                'status'            => UserStatus::SCHEDULED,
-                                'vaccination_date'  => Carbon::now()->addDays(rand(0,30))
-                            ]);
-                            $availableNumberOfDailyUsersForSchedule--;
-                        }
+                foreach ($usersToSchedule as $user) {
+                    if ($availableNumberOfDailyUsersForSchedule < 0) {
+                        break;
                     }
-                    
-                });
+
+                    if ($user->vaccine_center->daily_limit >= $availableNumberOfDailyUsersForSchedule) {
+                        $user->update([
+                            'status' => UserStatus::SCHEDULED,
+                            'vaccination_date' => Carbon::now()->addDays(rand(0, 30)),
+                        ]);
+                        $availableNumberOfDailyUsersForSchedule--;
+                    }
+                }
+
+            });
     }
 }

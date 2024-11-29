@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class VaccineCenter extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
-    
+
     public function users(): HasMany
     {
         return $this->hasMany(User::class);

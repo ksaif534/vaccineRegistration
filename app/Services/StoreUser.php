@@ -2,8 +2,7 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Auth;
-use App\Models\{User,VaccineCenter};
+use App\Models\User;
 use Hash;
 
 class StoreUser
@@ -16,18 +15,18 @@ class StoreUser
         //
     }
 
-    public function store(array $validated) : bool
+    public function store(array $validated): bool
     {
         $newRegisteredUser = User::create([
             'vaccine_center_id' => $validated['vaccine_center'],
-            'name'              => $validated['name'],
-            'email'             => $validated['email'],
-            'phone_number'      => $validated['phone'],
-            'nid'               => $validated['nid'],
-            'password'          => Hash::make($validated['password'])
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone_number' => $validated['phone'],
+            'nid' => $validated['nid'],
+            'password' => Hash::make($validated['password']),
         ]);
 
-        if (!empty($newRegisteredUser)) {
+        if (! empty($newRegisteredUser)) {
             return true;
         }
 

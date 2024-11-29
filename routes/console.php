@@ -1,9 +1,9 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Console\Scheduling\Schedule as ScheduleDay;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Console\Scheduling\Schedule as ScheduleDay;
-use App\Models\User;
 
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
@@ -11,7 +11,7 @@ Artisan::command('inspire', function () {
 
 $users = User::chunkById(20, function (\Illuminate\Database\Eloquent\Collection $users) {
     foreach ($users as $user) {
-        Schedule::command('schedule-vaccination-and-send-email '. $user->id)->dailyAt('21:00')->days([ScheduleDay::SUNDAY, ScheduleDay::MONDAY, ScheduleDay::TUESDAY, ScheduleDay::WEDNESDAY, ScheduleDay::THURSDAY]);
+        Schedule::command('schedule-vaccination-and-send-email '.$user->id)->dailyAt('21:00')->days([ScheduleDay::SUNDAY, ScheduleDay::MONDAY, ScheduleDay::TUESDAY, ScheduleDay::WEDNESDAY, ScheduleDay::THURSDAY]);
     }
 });
 

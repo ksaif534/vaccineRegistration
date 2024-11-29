@@ -17,8 +17,8 @@ class VaccineCenterFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'          => fake()->address(),
-            'daily_limit'   => fake()->numberBetween(0,100),
+            'name' => fake()->address(),
+            'daily_limit' => fake()->numberBetween(0, 100),
         ];
     }
 }

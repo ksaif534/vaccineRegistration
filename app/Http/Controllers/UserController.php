@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Services\StoreUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Services\StoreUser;
 
 class UserController extends Controller
 {
@@ -22,9 +22,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        $vaccineCenters = DB::table('vaccine_centers')->select('name','id')->get();
-        
-        return view('users.create',compact('vaccineCenters'));
+        $vaccineCenters = DB::table('vaccine_centers')->select('name', 'id')->get();
+
+        return view('users.create', compact('vaccineCenters'));
     }
 
     /**
@@ -33,14 +33,14 @@ class UserController extends Controller
     public function store(StoreUserRequest $request, StoreUser $storeUserService)
     {
         $validated = $request->validated();
-        
+
         $response = $storeUserService->store($validated);
 
         if ($response) {
             return back()->with(['msg' => 'User Registered Successfully. You will soon be notified about vaccine date schedule.']);
         }
 
-        return back()->with(['msg'=> 'Sorry, Could not register user']);
+        return back()->with(['msg' => 'Sorry, Could not register user']);
     }
 
     /**

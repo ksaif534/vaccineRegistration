@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{UserController};
 
 Route::get('/', function () {
     return to_route('user.register');
@@ -9,6 +9,6 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix' => 'users'], function () {
-    Route::get('/register', [UserController::class,'create'])->name('user.register');
-    Route::post('/store', [UserController::class,'store'])->name('user.store');
+    Route::get('/register', [UserController::class, 'create'])->name('user.register');
+    Route::post('/store', [UserController::class, 'store'])->name('user.store');
 });
