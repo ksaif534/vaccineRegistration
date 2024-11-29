@@ -47,8 +47,6 @@ class UserResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                 ->searchable(),
-                Tables\Columns\TextColumn::make('nid')
-                ->searchable(),
                 Tables\Columns\TextColumn::make('phone_number')
                 ->searchable(),
                 Tables\Columns\TextColumn::make('status')
