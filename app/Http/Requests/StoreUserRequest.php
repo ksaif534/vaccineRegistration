@@ -26,7 +26,7 @@ class StoreUserRequest extends FormRequest
             'email' => 'required|max:511',
             'phone' => 'required|max:511',
             'nid' => 'required|max:511',
-            'vaccine_center' => 'required',
+            'vaccine_center' => '',
             'password' => 'required',
         ];
     }

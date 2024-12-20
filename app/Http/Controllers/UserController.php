@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Models\User;
 use App\Services\StoreUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Log;
 
 class UserController extends Controller
 {
@@ -41,6 +44,62 @@ class UserController extends Controller
         }
 
         return back()->with(['msg' => 'Sorry, Could not register user']);
+    }
+
+    public function handleGoogleFormWebhook(Request $request)
+    {
+        Log::info('Raw webhook payload:', [
+            'all' => $request->all(),
+            'name' => $request->name,
+            'email' => $request->email,
+            'nid' => $request->nid,
+            'vaccine_center' => $request->vaccine_center,
+        ]);
+
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string',
+                'email' => 'required|email',
+                'password' => 'required',
+                'nid' => 'required',
+                'vaccine_center' => 'required',
+                'phone' => '',
+            ]);
+
+            Log::info('Validation passed:', $validated);
+
+            $newUser = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'nid' => $request->nid,
+                'vaccine_center_id' => $request->vaccine_center,
+            ]);
+
+            Log::info('New user created:', $newUser->toArray());
+
+            if (! empty($newUser) && ! is_null($newUser)) {
+                return response()->json([
+                    'validatedData' => $newUser,
+                    'msg' => 'success',
+                    'received' => $request->all(),
+                ], 200);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation errors:', $e->errors());
+
+            return response()->json([
+                'msg' => 'error',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Validation errors:', ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'msg' => 'error',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

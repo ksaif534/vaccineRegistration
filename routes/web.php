@@ -11,4 +11,5 @@ Route::get('/', function () {
 Route::group(['prefix' => 'users'], function () {
     Route::get('/register', [UserController::class, 'create'])->name('user.register');
     Route::post('/store', [UserController::class, 'store'])->name('user.store');
+    Route::post('/webhook/google-forms', [UserController::class, 'handleGoogleFormWebhook'])->name('webhook-google-forms');
 });
